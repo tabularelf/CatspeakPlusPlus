@@ -25,5 +25,8 @@ I have exposed this from Catspeak++ directly, so now anyone can use `params` and
 ## Will more features and optimisations come?
 Optimisations? Maybe. It really depends on whether it is worth my time or not. But in truth, I mainly intend on keeping compatibility with Catspeak v3. Outside of `exposeCompileTimeFunction` and exposure of `params`/`params_count`, no other feature will be coming to Catspeak++ at this time.
 
+## With above, does this mean updates to Catspeak will be incompatiable?
+Any/all updates to Catspeak v3, will entirely rely on me manually adding in fixes or additions wherever needed. When Catspeak v4 comes out, I am more than certain that Catspeak++ will become obsolete.
+
 ## I have a problem with Catspeak++, where do I go to report it?
 If you are in the [GameMaker Kitchen Discord](https://discord.gg/gamemakerkitchen), please ask under `#tabular___misc`. I strongly prefer if Catspeak++ help is pushed over there. Otherwise please make an issue from the repo above, and I'll get back to you as soon as possible.
