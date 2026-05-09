@@ -213,9 +213,45 @@ function CatspeakGMLCompiler(ir, interface=undefined) constructor {
 	/// @return {Bool}
 	static __isAllConstant = function(_elm) {
 		if (struct_exists(_elm, "args")) {
-			return array_all(_elm.args, __isAllConstant)
+			return array_all(_elm.args, __isAllConstant);
 		}
-		return _elm[$ "type"] == CatspeakTerm.VALUE;
+		
+		if (_elm[$ "type"] == CatspeakTerm.VALUE) {
+			return true;
+		}
+
+		if (_elm[$ "type"] == CatspeakTerm.GLOBAL) {
+			var _ref = __get(_elm.name);
+			if (__isAssetRef(_ref)) {
+				return true;
+			} 
+
+			if (is_method(_ref)) {
+				return true;
+			}
+		}
+
+		return false;
+	};
+
+	/// @ignore
+	///
+	/// @param {Struct} ref
+	/// @return {Bool}
+	static __isAssetRef = function(ref) {
+		if (!is_handle(ref)) return false;
+		if (sprite_exists(ref)) return true;
+		if (audio_exists(ref)) return true;
+		if (object_exists(ref)) return true;	
+		if (room_exists(ref)) return true;
+		if (font_exists(ref)) return true;
+		if (path_exists(ref)) return true;
+
+		var type = asset_get_type(ref);
+		if (type == asset_shader) return true;
+		if (type == asset_tiles) return true;
+
+		return false;
 	};
 
     /// @ignore
@@ -718,6 +754,17 @@ function CatspeakGMLCompiler(ir, interface=undefined) constructor {
 				with({args, _argsDynamic}) array_map_ext(exprs, function(_elm, _index) {
 					if (args[_index].type == CatspeakTerm.VALUE) {
 						return _elm();
+					}
+
+					if (_elm[$ "type"] == CatspeakTerm.GLOBAL) {
+						var _ref = __get(_elm.name);
+						if (__isAssetRef(_ref)) {
+							return _elm();
+						} 
+        		    	
+						if (is_method(_ref)) {
+							return _elm();
+						}
 					}
 	
 					array_push(_argsDynamic, _index);
