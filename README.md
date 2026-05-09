@@ -23,5 +23,4 @@ Like in GML, you are able to access arguments of a function via `argument[index]
 I have exposed this from Catspeak++ directly, so now anyone can use `params` and `params_count` within Catspeak!
 
 ## Will more features and optimisations come?
-Optimisations? Maybe. It really depends on whether it is worth my time or not. But in truth, I mainly intend on keeping compatibility with Catspeak v3. Outside of `exposeCompileTimeFunction` and exposure of `params`/`params_count`, no other feature<br>
-will be coming to Catspeak++ at this time.
+Optimisations? Maybe. It really depends on whether it is worth my time or not. But in truth, I mainly intend on keeping compatibility with Catspeak v3. Outside of `exposeCompileTimeFunction` and exposure of `params`/`params_count`, no other feature will be coming to Catspeak++ at this time.
