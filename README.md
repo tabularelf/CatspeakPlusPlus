@@ -1,5 +1,5 @@
 # Catspeak++
-A monthly extension of Catspeak v3 by @katsaii, with support for constant aware arguments & compile-time function calls. As well as some minor optimations made in place, and exposure of `params` and `params_count`.
+A monthly extension of [Catspeak](https://github.com/katsaii/catspeak-lang) v3 by @katsaii, with support for constant aware arguments & compile-time function calls. As well as some minor optimations made in place, and exposure of `params` and `params_count`.
 
 ## What does constant aware arguments mean?
 
@@ -24,3 +24,6 @@ I have exposed this from Catspeak++ directly, so now anyone can use `params` and
 
 ## Will more features and optimisations come?
 Optimisations? Maybe. It really depends on whether it is worth my time or not. But in truth, I mainly intend on keeping compatibility with Catspeak v3. Outside of `exposeCompileTimeFunction` and exposure of `params`/`params_count`, no other feature will be coming to Catspeak++ at this time.
+
+## I have a problem with Catspeak++, where do I go to report it?
+If you are in the [GameMaker Kitchen Discord](https://discord.gg/gamemakerkitchen), please ask under `#tabular___misc`. I strongly prefer if Catspeak++ help is pushed over there. Otherwise please make an issue from the repo above, and I'll get back to you as soon as possible.
