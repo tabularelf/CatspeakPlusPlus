@@ -11,7 +11,7 @@ This allows Catspeak to instead only update values that are not constant (such a
 Going back to our `power(2, 2)` example, it does seem a lil bit silly for a function that returns a value that doesn't modify the global state (doesn't affect future calls), shouldn't need to be called with the arguments at runtime.
 Catspeak++ introduces compile-time function calls. Which can be accessed by `environment.interface.exposeCompileTimeFunction(name, func, ...)`
 
-In the above case, if `power` is exposed as a compile-time function `Catspeak.interface.exposeCompileTimeFunction("power", power)`, and all of the arguments are constants (`power(2, 2)`), Catspeak will instead call & store the resulting value as is<br> at compile time. If a singular non-value (number or string) is introduced within the argument calls, it will fallback to just being a runtime call.
+In the above case, if `power` is exposed as a compile-time function `Catspeak.interface.exposeCompileTimeFunction("power", power)`, and all of the arguments are constants (`power(2, 2)`), Catspeak will instead call & store the resulting value as is at compile time. If a singular non-value (number or string) is introduced within the argument calls, it will fallback to just being a runtime call.
 
 ## What other optimisations have been made?
 - dot access & struct keys that are constant, are replaced by a hash lookup. (index only as of writing)
