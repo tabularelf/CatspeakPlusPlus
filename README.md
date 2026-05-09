@@ -1,5 +1,5 @@
 # Catspeak++
-A monthly extension of Catspeak v3 by @katsaii, with support for constant aware arguments & compile-time function calls. As well as some minor optimations made in place.
+A monthly extension of Catspeak v3 by @katsaii, with support for constant aware arguments & compile-time function calls. As well as some minor optimations made in place, and exposure of `params` and `params_count`.
 
 ## What does constant aware arguments mean?
 
@@ -18,3 +18,7 @@ as is at compile time. If a singular non-value (number or string) is introduced 
 - dot access & struct keys that are constant, are replaced by a hash lookup. (index only as of writing)
 - Some bypasses to `script_get_index` on the current runtime, as there is a speed penalty in regards to calling `script_get_index` in the worse of cases. (Applies to exposed functions/methods only)
 - `method_call` replacing `script_execute_ext` in some places. (Mainly the constant aware variety calls)
+
+## params & params_count?
+Like in GML, you are able to access arguments of a function via `argument[index]` and `argument_count`. Catspeak has its own, but this wasn't previously exposed as this was experimental and introduced in a PR for GMLspeak (another work of mine).<br>
+I have exposed this from Catspeak++ directly, so now anyone can use `params` and `params_count` within Catspeak!
