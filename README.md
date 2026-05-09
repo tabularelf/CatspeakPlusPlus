@@ -1,5 +1,5 @@
 # Catspeak++
-A monthly extension of Catspeak by @katsaii, with support for constant aware arguments & compile-time function calls. As well as some minor optimations made in place.
+A monthly extension of Catspeak v3 by @katsaii, with support for constant aware arguments & compile-time function calls. As well as some minor optimations made in place.
 
 ## What does constant aware arguments mean?
 
