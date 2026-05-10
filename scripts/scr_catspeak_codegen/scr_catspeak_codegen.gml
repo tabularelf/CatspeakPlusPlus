@@ -211,9 +211,9 @@ function CatspeakGMLCompiler(ir, interface=undefined) constructor {
 	///
 	/// @param {Struct} elm
 	/// @return {Bool}
-	static __isAllConstant = function(_elm) {
+	static __isConstant = function(_elm) {
 		if (struct_exists(_elm, "args")) {
-			return array_all(_elm.args, __isAllConstant);
+			return array_all(_elm.args, __isConstant);
 		}
 		
 		if (_elm[$ "type"] == CatspeakTerm.VALUE) {
@@ -227,6 +227,14 @@ function CatspeakGMLCompiler(ir, interface=undefined) constructor {
 			} 
 
 			if (is_method(_ref)) {
+				return true;
+			}
+
+			if (is_numeric(_ref)) {
+				return true;
+			}
+
+			if (is_string(_ref)) {
 				return true;
 			}
 		}
@@ -745,29 +753,17 @@ function CatspeakGMLCompiler(ir, interface=undefined) constructor {
             var key = __compileTerm(ctx, term.callee.key);
 			var func = __catspeak_expr_call_method__;
 
-			if (array_all(args, __isAllConstant)) {
+			if (array_all(args, __isConstant)) {
 				func = __catspeak_expr_call_method_constant__;
 				array_map_ext(exprs, __executeConstant);
-			} else if (array_any(args, __isAllConstant)) {
+			} else if (array_any(args, __isConstant)) {
 				func = __catspeak_expr_call_method_constant_some__;
 				var _argsDynamic = [];
-				with({args, _argsDynamic}) array_map_ext(exprs, function(_elm, _index) {
-					if (args[_index].type == CatspeakTerm.VALUE) {
-						return _elm();
+				with({args, _argsDynamic, __isConstant}) array_map_ext(exprs, function(_elm, _index) {
+					if (__isConstant(args[_index])) {
+						return args[_index]();
 					}
-
-					if (_elm[$ "type"] == CatspeakTerm.GLOBAL) {
-						var _ref = __get(_elm.name);
-						if (__isAssetRef(_ref)) {
-							return _elm();
-						} 
-        		    	
-						if (is_method(_ref)) {
-							return _elm();
-						}
-					}
-	
-					array_push(_argsDynamic, _index);
+ 					array_push(_argsDynamic, _index);
 					return _elm;
 				});
 
@@ -793,15 +789,15 @@ function CatspeakGMLCompiler(ir, interface=undefined) constructor {
             var func = __catspeak_expr_call__;
 			var callee = __compileTerm(ctx, term.callee);
 
-			if (array_all(args, __isAllConstant)) {
+			if (array_all(args, __isConstant)) {
 				func = __catspeak_expr_call_constant__;
 				array_map_ext(exprs, __executeConstant);
-			} else if (array_any(args, __isAllConstant)) {
+			} else if (array_any(args, __isConstant)) {
 				func = __catspeak_expr_call_constant_some__;
 				var argsDynamic_ = [];
-				with({args, argsDynamic_}) array_map_ext(exprs, function(_elm, _index) {
-					if (args[_index].type == CatspeakTerm.VALUE) {
-						return _elm();
+				with({args, argsDynamic_, __isConstant}) array_map_ext(exprs, function(_elm, _index) {
+					if (__isConstant(args[_index])) {
+						return args[_index]();
 					}
 	
 					array_push(argsDynamic_, _index);
@@ -1245,6 +1241,7 @@ function CatspeakGMLCompiler(ir, interface=undefined) constructor {
 /// @ignore
 /// @return {Any}
 function __catspeak_function_v3__() {
+	static _undefinedCallback = function() {return undefined};
     var isRecursing = callTime >= 0;
     var localCount = array_length(locals);
     if (isRecursing) {
@@ -1302,11 +1299,14 @@ function __catspeak_function_v3__() {
             // reset the timer
             callTime = -1;
             // Clear locals
-            // Gone with array_resize, as it's faster to resize than to loop
+            // Gone with array_resize, as it's faster to resize than to loop 
             array_resize(locals, 0);
             array_resize(locals, localCount);
             array_resize(args, 0);
             array_resize(args, argCount);
+			if (argCount > 0) {
+				array_map_ext(args, _undefinedCallback);
+			}
         }
     }
     if (doThrowValue) {
@@ -2143,11 +2143,6 @@ function __catspeak_expr_index_set_hash__() {
 		var key_ = key();
         collection_[@ key_] = value_;
     } else if (__catspeak_is_withable(collection_)) {
-        var specialSet = struct_get_from_hash(global.__catspeakGmlSpecialVars, hash);
-        if (specialSet != undefined) {
-            specialSet(collection_, value_);
-            return;
-        }
         //collection_[$ key_] = value_;
 		struct_set_from_hash(collection_, hash, value_);
     } else {
@@ -2164,11 +2159,6 @@ function __catspeak_expr_index_set_mult_hash__() {
 		var key_ = key();
         collection_[@ key_] *= value_;
     } else if (__catspeak_is_withable(collection_)) {
-        var specialSet = struct_get_from_hash(global.__catspeakGmlSpecialVars, hash);
-        if (specialSet != undefined) {
-            specialSet(collection_, struct_get_from_hash(collection_, hash) * value_);
-            return;
-        }
 		struct_set_from_hash(collection_, hash, struct_get_from_hash(collection_, hash) * value_);
         //collection_[$ key_] *= value_;
     } else {
@@ -2185,11 +2175,6 @@ function __catspeak_expr_index_set_div_hash__() {
     if (is_array(collection_)) {
         collection_[@ key_] /= value_;
     } else if (__catspeak_is_withable(collection_)) {
-        var specialSet = global.__catspeakGmlSpecialVars[$ key_];
-        if (specialSet != undefined) {
-            specialSet(collection_, collection_[$ key_] / value_);
-            return;
-        }
         collection_[$ key_] /= value_;
     } else {
         __catspeak_error_v3_got(dbgError, collection_);
@@ -2205,11 +2190,6 @@ function __catspeak_expr_index_set_sub_hash__() {
     if (is_array(collection_)) {
         collection_[@ key_] -= value_;
     } else if (__catspeak_is_withable(collection_)) {
-        var specialSet = global.__catspeakGmlSpecialVars[$ key_];
-        if (specialSet != undefined) {
-            specialSet(collection_, collection_[$ key_] - value_);
-            return;
-        }
         collection_[$ key_] -= value_;
     } else {
         __catspeak_error_v3_got(dbgError, collection_);
@@ -2225,11 +2205,6 @@ function __catspeak_expr_index_set_plus_hash__() {
     if (is_array(collection_)) {
         collection_[@ key_] += value_;
     } else if (__catspeak_is_withable(collection_)) {
-        var specialSet = global.__catspeakGmlSpecialVars[$ key_];
-        if (specialSet != undefined) {
-            specialSet(collection_, collection_[$ key_] + value_);
-            return;
-        }
         collection_[$ key_] += value_;
     } else {
         __catspeak_error_v3_got(dbgError, collection_);
@@ -2259,11 +2234,6 @@ function __catspeak_expr_index_set__() {
     if (is_array(collection_)) {
         collection_[@ key_] = value_;
     } else if (__catspeak_is_withable(collection_)) {
-        var specialSet = global.__catspeakGmlSpecialVars[$ key_];
-        if (specialSet != undefined) {
-            specialSet(collection_, value_);
-            return;
-        }
         collection_[$ key_] = value_;
     } else {
         __catspeak_error_v3_got(dbgError, collection_);
@@ -2279,11 +2249,6 @@ function __catspeak_expr_index_set_mult__() {
     if (is_array(collection_)) {
         collection_[@ key_] *= value_;
     } else if (__catspeak_is_withable(collection_)) {
-        var specialSet = global.__catspeakGmlSpecialVars[$ key_];
-        if (specialSet != undefined) {
-            specialSet(collection_, collection_[$ key_] * value_);
-            return;
-        }
         collection_[$ key_] *= value_;
     } else {
         __catspeak_error_v3_got(dbgError, collection_);
@@ -2299,11 +2264,6 @@ function __catspeak_expr_index_set_div__() {
     if (is_array(collection_)) {
         collection_[@ key_] /= value_;
     } else if (__catspeak_is_withable(collection_)) {
-        var specialSet = global.__catspeakGmlSpecialVars[$ key_];
-        if (specialSet != undefined) {
-            specialSet(collection_, collection_[$ key_] / value_);
-            return;
-        }
         collection_[$ key_] /= value_;
     } else {
         __catspeak_error_v3_got(dbgError, collection_);
@@ -2319,11 +2279,6 @@ function __catspeak_expr_index_set_sub__() {
     if (is_array(collection_)) {
         collection_[@ key_] -= value_;
     } else if (__catspeak_is_withable(collection_)) {
-        var specialSet = global.__catspeakGmlSpecialVars[$ key_];
-        if (specialSet != undefined) {
-            specialSet(collection_, collection_[$ key_] - value_);
-            return;
-        }
         collection_[$ key_] -= value_;
     } else {
         __catspeak_error_v3_got(dbgError, collection_);
@@ -2339,11 +2294,6 @@ function __catspeak_expr_index_set_plus__() {
     if (is_array(collection_)) {
         collection_[@ key_] += value_;
     } else if (__catspeak_is_withable(collection_)) {
-        var specialSet = global.__catspeakGmlSpecialVars[$ key_];
-        if (specialSet != undefined) {
-            specialSet(collection_, collection_[$ key_] + value_);
-            return;
-        }
         collection_[$ key_] += value_;
     } else {
         __catspeak_error_v3_got(dbgError, collection_);
