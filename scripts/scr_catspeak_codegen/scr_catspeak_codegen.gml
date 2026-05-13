@@ -740,7 +740,7 @@ function CatspeakGMLCompiler(ir, interface=undefined) constructor {
         var exprs = array_create(argCount);
         for (var i = 0; i < argCount; i += 1) {
             exprs[@ i] = __compileTerm(ctx, args[i]);
-        }
+		}
         var dbgError = __dbgTerm(term.callee, "is not a function");
         if (term.callee.type == CatspeakTerm.INDEX) {
             if (CATSPEAK_DEBUG_MODE) {
@@ -795,9 +795,10 @@ function CatspeakGMLCompiler(ir, interface=undefined) constructor {
 			} else if (array_any(args, __isConstant)) {
 				func = __catspeak_expr_call_constant_some__;
 				var argsDynamic_ = [];
-				with({args, argsDynamic_, __isConstant}) array_map_ext(exprs, function(_elm, _index) {
+				var _isConstant = method(self, __isConstant);
+				with({args, argsDynamic_, __isConstant: _isConstant}) array_map_ext(exprs, function(_elm, _index) {
 					if (__isConstant(args[_index])) {
-						return args[_index]();
+						return _elm();
 					}
 	
 					array_push(argsDynamic_, _index);
@@ -823,7 +824,6 @@ function CatspeakGMLCompiler(ir, interface=undefined) constructor {
             	}
 			}
 
-           
             return method({
                 dbgError : dbgError,
                 callee : callee,
@@ -1700,29 +1700,6 @@ function __catspeak_expr_op_2__() {
 
 function __catspeak_script_execute_ext_fixed(callee_, args_) {
     // LTS has issues with calling functions that have many args, so fix that here
-    var n = array_length(args_);
-    switch (n) {
-        // triangle of doom gets a free pass on line length restrictions
-        // as a treat
-        // TODO :: slow as hell
-    case 0: return callee_();
-    case 1: return callee_(args_[0]);
-    case 2: return callee_(args_[0], args_[1]);
-    case 3: return callee_(args_[0], args_[1], args_[2]);
-    case 4: return callee_(args_[0], args_[1], args_[2], args_[3]);
-    case 5: return callee_(args_[0], args_[1], args_[2], args_[3], args_[4]);
-    case 6: return callee_(args_[0], args_[1], args_[2], args_[3], args_[4], args_[5]);
-    case 7: return callee_(args_[0], args_[1], args_[2], args_[3], args_[4], args_[5], args_[6]);
-    case 8: return callee_(args_[0], args_[1], args_[2], args_[3], args_[4], args_[5], args_[6], args_[7]);
-    case 9: return callee_(args_[0], args_[1], args_[2], args_[3], args_[4], args_[5], args_[6], args_[7], args_[8]);
-    case 10: return callee_(args_[0], args_[1], args_[2], args_[3], args_[4], args_[5], args_[6], args_[7], args_[8], args_[9]);
-    case 11: return callee_(args_[0], args_[1], args_[2], args_[3], args_[4], args_[5], args_[6], args_[7], args_[8], args_[9], args_[10]);
-    case 12: return callee_(args_[0], args_[1], args_[2], args_[3], args_[4], args_[5], args_[6], args_[7], args_[8], args_[9], args_[10], args_[11]);
-    case 13: return callee_(args_[0], args_[1], args_[2], args_[3], args_[4], args_[5], args_[6], args_[7], args_[8], args_[9], args_[10], args_[11], args_[12]);
-    case 14: return callee_(args_[0], args_[1], args_[2], args_[3], args_[4], args_[5], args_[6], args_[7], args_[8], args_[9], args_[10], args_[11], args_[12], args_[13]);
-    case 15: return callee_(args_[0], args_[1], args_[2], args_[3], args_[4], args_[5], args_[6], args_[7], args_[8], args_[9], args_[10], args_[11], args_[12], args_[13], args_[14]);
-    case 16: return callee_(args_[0], args_[1], args_[2], args_[3], args_[4], args_[5], args_[6], args_[7], args_[8], args_[9], args_[10], args_[11], args_[12], args_[13], args_[14], args_[15]);
-    }
     return script_execute_ext(callee_, args_);
 }
 
