@@ -33,3 +33,6 @@ If you are in the [GameMaker Kitchen Discord](https://discord.gg/gamemakerkitche
 
 ## Are you working with Kat on this?
 lol no. This is for myself.
+
+## Would you accept X feature?
+If unless it's entirely for optimisation purposes at runtime, likely no. Go ask on the [Catspeak](https://github.com/katsaii/catspeak-lang) repo instead.
