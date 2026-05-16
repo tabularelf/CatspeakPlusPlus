@@ -30,3 +30,6 @@ Any/all updates to Catspeak v3, will entirely rely on me manually adding in fixe
 
 ## I have a problem with Catspeak++, where do I go to report it?
 If you are in the [GameMaker Kitchen Discord](https://discord.gg/gamemakerkitchen), please ask under `#tabular___misc`. I strongly prefer if Catspeak++ help is pushed over there. Otherwise please make an issue from the repo above, and I'll get back to you as soon as possible.
+
+## Are you working with Kat on this?
+lol no. This is for myself.
