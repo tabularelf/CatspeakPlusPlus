@@ -36,3 +36,6 @@ lol no. This is for myself.
 
 ## Would you accept X feature?
 If unless it's entirely for optimisation purposes at runtime, likely no. Go ask on the [Catspeak](https://github.com/katsaii/catspeak-lang) repo instead.
+
+## Who is this for?
+Me, myself and I. It might be also interesting for others who are looking at optimisations for their own compilation, but it is ultimately just for me.
